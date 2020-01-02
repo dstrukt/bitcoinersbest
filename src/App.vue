@@ -6,7 +6,6 @@
         <register-modal />
         <invoice-modal />
 
-        <b-button v-b-modal.invoice-modal>Trigger Invoice Modal</b-button>
         <b-button v-b-modal.register-modal>Trigger Register Modal</b-button>
 
         <router-view></router-view>
