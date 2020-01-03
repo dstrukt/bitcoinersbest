@@ -10,10 +10,14 @@
   <b-row>
   <b-col cols="12">
    <label class="c-white mb-20">Pick your resource type: </label>
-    <b-form-select v-model="selected" :options="options" class="submit-resouce-selector mb-30"></b-form-select>
+    <!-- <b-form-select v-model="selected" :options="options" class="submit-resouce-selector mb-30" @change="onSelectChange()"></b-form-select> -->
+      <select class="form-control" v-model="selected">
+        <option value="Select Resource" selected disabled>Select Resource</option>
+        <option v-for="o in options" v-bind:value="o">{{o.text}}</option>
+      </select>
   </b-col>
  </b-row>
-  <div v-if="selected === '20'">
+  <div v-if="selected.value === '20'">
     <b-row>
       <b-col cols="8">
 
@@ -117,7 +121,7 @@
 
   </div>
 
-  <div v-if="selected === '25'">
+  <div v-if="selected.value === '25'">
     <b-row>
     <b-col cols="8">
 
@@ -197,7 +201,7 @@
   </div>
 
 
-  <div v-if="selected === '30'">
+  <div v-if="selected.value === '30'">
     <b-row>
       <b-col cols="8">
 
@@ -268,6 +272,11 @@
          <pre class="m-0">{{ Article }}</pre>
        </b-card>
 
+       <div class="mt-2 c-white">
+         <div id="preview">
+             <img v-if="Article.image" :src="Article.image" />
+         </div>
+       </div>
       <div class="mt-2 c-white">{{ Article.image }}</div>
       <div class="mt-2 c-white">{{ Article.title }}</div>
       <div class="mt-2 c-white">{{ Article.description }}</div>
@@ -277,7 +286,7 @@
   </div>
 
 
-  <div v-if="selected === '35'">
+  <div v-if="selected.value === '35'">
     <b-row>
       <b-col cols="8">
 
@@ -348,7 +357,7 @@
   </div>
 
 
-   <div v-if="selected === '40'">
+   <div v-if="selected.value === '40'">
 
      <b-col cols="4 preview">
 
@@ -445,18 +454,36 @@ export default {
       this.createImage(files[0]);
     },
     createImage(file) {
-      this.Podcast.image = new Image();
+      if (this.selected.value == "20") {
+        this.Podcast.image = new Image();
+      } else if (this.selected.value == "25") {
+        this.Episode.image = new Image();
+      } else if (this.selected.value == "30") {
+        this.Article.image = new Image();
+      }
       var reader = new FileReader();
       var vm = this;
 
       reader.onload = (e) => {
-        vm.Podcast.image = e.target.result;
+        if (this.selected.value == "20") {
+          vm.Podcast.image = e.target.result;
+        } else if (this.selected.value == "25") {
+          vm.Episode.image = e.target.result;
+        } else if (this.selected.value == "30") {
+          vm.Article.image = e.target.result;
+        }
       };
       reader.readAsDataURL(file);
       console.log(file);
     },
     removeImage: function (e) {
-      this.Podcast.image = '';
+      if (this.selected.value == "20") {
+        this.Podcast.image = '';
+      } else if (this.selected.value == "25") {
+        this.Episode.image = '';
+      } else if (this.selected.value == "30") {
+        this.Article.image = '';
+      }
     },
     addResource(evt) {
       var self = this;
@@ -470,34 +497,34 @@ export default {
       }
 
       var formData = new FormData();
-      if (this.selected == "20") {
+      if (this.selected.value == "20") {
         formData.append("title", self.Podcast.title);
         formData.append("description", self.Podcast.description);
         formData.append("image", this.Podcast.image);
         formData.append("rss", self.Podcast.rss);
         formData.append("created_by", self.Podcast.created_by);
-        formData.append("res_type_id", this.selected);
+        formData.append("res_type_id", this.selected.value);
         formData.append("url", self.Podcast.url);
-      } else if (this.selected == "25") {
+      } else if (this.selected.value == "25") {
         formData.append("title", self.Episode.title);
         formData.append("description", self.Episode.description);
         formData.append("image", self.Episode.image);
         formData.append("created_by", self.Episode.created_by);
-        formData.append("res_type_id", this.selected);
+        formData.append("res_type_id", this.selected.value);
         formData.append("url", self.Episode.url);
         formData.append("rss", this.Episode.rss);
-      } else if (this.selected == "30") {
+      } else if (this.selected.value == "30") {
         formData.append("title", self.Article.title);
         formData.append("description", self.Article.description);
-        formData.append("image", self.Article.image);
+        formData.append("image", this.Article.image);
         formData.append("created_by", self.Article.created_by);
-        formData.append("res_type_id", this.selected);
+        formData.append("res_type_id", this.selected.value);
         formData.append("url", self.Article.url);
-      } else if (this.selected == "35") {
+      } else if (this.selected.value == "35") {
         formData.append("title", self.Book.title);
         formData.append("image", self.Book.image);
         formData.append("created_by", self.Book.created_by);
-        formData.append("res_type_id", this.selected);
+        formData.append("res_type_id", this.selected.value);
         formData.append("url", self.Book.url);
       }
 
@@ -517,30 +544,31 @@ export default {
     // todo:
     // reduce this
     resetForm(selected) {
-      if (selected == "20") {
+      if (selected.value == "20") {
         this.Podcast.title = '';
         this.Podcast.description = '';
         this.Podcast.image = '';
         this.Podcast.url = '';
         this.Podcast.created_by = '';
-      } else if (selected == "25") {
+        this.Podcast.rss = '';
+      } else if (selected.value == "25") {
         this.Episode.title = '';
         this.Episode.description = '';
         this.Episode.image = '';
         this.Episode.url = '';
         this.Episode.created_by = '';
-      } else if (selected == "30") {
+      } else if (selected.value == "30") {
         this.Article.title = '';
         this.Article.description = '';
         this.Article.image = '';
         this.Article.url = '';
         this.Article.created_by = '';
-      } else if (selected == "35") {
+      } else if (selected.value == "35") {
         this.Book.title = '';
         this.Book.image = '';
         this.Book.url = '';
         this.Book.created_by = '';
-      } else if (selected == "40") {
+      } else if (selected.value == "40") {
 
       }
     }

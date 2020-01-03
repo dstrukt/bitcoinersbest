@@ -17,14 +17,15 @@ import Signup from "./views/Signup.vue";
 import Submit from "./views/Submit.vue";
 import Profile from "./views/Profile.vue";
 
-import Podcast from "./components/resources/Podcast.vue";
-// import Article from "./components/resources/Article.vue";
+import PodcastList from "./components/resources/podcast/PodcastList.vue";
 
 import ArticleList from "./components/resources/article/ArticleList.vue";
 
 import Book from "./components/resources/Book.vue";
+
 import Thread from "./components/resources/Thread.vue";
-import Episode from "./components/resources/Episode.vue";
+
+import EpisodeList from "./components/resources/episode/EpisodeList.vue";
 
 import Resource from "./components/resources/detail/Resource.vue";
 
@@ -53,11 +54,11 @@ const router = new VueRouter({
     { path: '/submit', name: 'submit', component: Submit },
     { path: '/profile/:name', name: 'profile', component: Profile, props: true },
 
-    { path: '/podcast', name: 'podcast', component: Podcast, props: true },
+    { path: '/podcast', name: 'podcast', component: PodcastList, props: true },
     { path: '/article', name: 'article', component: ArticleList, props: true },
     { path: '/book', name: 'book', component: Book, props: true },
     { path: '/thread', name: 'thread', component: Thread, props: true },
-    { path: '/episode', name: 'episode', component: Episode, props: true },
+    { path: '/episode', name: 'episode', component: EpisodeList, props: true },
 
     //{ path: '/:id/:title', name: 'resource', component: Resource, props: true },
 
